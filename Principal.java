@@ -49,8 +49,10 @@ public class Principal {
 				boleto.consultaIndividual(comprador,localidad);
 				opcion = menu();
 			}
-
-
+			if (opcion == 5){
+				boleto.reporte(comprador);
+				opcion = menu();
+			}
         }
     
     }

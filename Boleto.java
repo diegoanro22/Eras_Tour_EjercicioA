@@ -22,6 +22,7 @@ public class Boleto {
     private int cantLocal2;
     private int cantLocal3;
     private Random generador;
+    private int totalVendido;
 
     public Boleto(){
         boletosDispo = 60;
@@ -35,10 +36,11 @@ public class Boleto {
         cantLocal2 = 20;
         cantLocal3 = 20;
         generador = new Random();
+        totalVendido = 0;
     }
 
 
-    public Boleto(int boletosDispo, int Local1, int Local5, int Local10, int a, int b, int c, int cantLocal1, int cantLocal2, int cantLocal3, Random generador) {
+    public Boleto(int boletosDispo, int Local1, int Local5, int Local10, int a, int b, int c, int cantLocal1, int cantLocal2, int cantLocal3, Random generador, int totalVendido) {
         this.boletosDispo = boletosDispo;
         this.Local1 = Local1;
         this.Local5 = Local5;
@@ -50,6 +52,7 @@ public class Boleto {
         this.cantLocal2 = cantLocal2;
         this.cantLocal3 = cantLocal3;
         this.generador = generador;
+        this.totalVendido = totalVendido;
     }
 
     public int getBoletosDispo() {
@@ -140,6 +143,14 @@ public class Boleto {
         this.generador = generador;
     }
 
+    public int getTotalVendido() {
+        return this.totalVendido;
+    }
+
+    public void setTotalVendido(int totalVendido) {
+        this.totalVendido = totalVendido;
+    }
+
     public Boleto boletosDispo(int boletosDispo) {
         setBoletosDispo(boletosDispo);
         return this;
@@ -195,6 +206,11 @@ public class Boleto {
         return this;
     }
 
+    public Boleto totalVendido(int totalVendido) {
+        setTotalVendido(totalVendido);
+        return this;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (o == this)
@@ -203,12 +219,12 @@ public class Boleto {
             return false;
         }
         Boleto boleto = (Boleto) o;
-        return boletosDispo == boleto.boletosDispo && Local1 == boleto.Local1 && Local5 == boleto.Local5 && Local10 == boleto.Local10 && a == boleto.a && b == boleto.b && c == boleto.c && cantLocal1 == boleto.cantLocal1 && cantLocal2 == boleto.cantLocal2 && cantLocal3 == boleto.cantLocal3 && Objects.equals(generador, boleto.generador);
+        return boletosDispo == boleto.boletosDispo && Local1 == boleto.Local1 && Local5 == boleto.Local5 && Local10 == boleto.Local10 && a == boleto.a && b == boleto.b && c == boleto.c && cantLocal1 == boleto.cantLocal1 && cantLocal2 == boleto.cantLocal2 && cantLocal3 == boleto.cantLocal3 && Objects.equals(generador, boleto.generador) && totalVendido == boleto.totalVendido;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(boletosDispo, Local1, Local5, Local10, a, b, c, cantLocal1, cantLocal2, cantLocal3, generador);
+        return Objects.hash(boletosDispo, Local1, Local5, Local10, a, b, c, cantLocal1, cantLocal2, cantLocal3, generador, totalVendido);
     }
 
     @Override
@@ -225,8 +241,10 @@ public class Boleto {
             ", cantLocal2='" + getCantLocal2() + "'" +
             ", cantLocal3='" + getCantLocal3() + "'" +
             ", generador='" + getGenerador() + "'" +
+            ", totalVendido='" + getTotalVendido() + "'" +
             "}";
     }
+
 
     public int generadorRandom(){
         return generador.nextInt(15000)+1;
@@ -255,11 +273,14 @@ public class Boleto {
             switch (localidad) {
                 case 1:
                     if (cantLocal1!=0){
-                        if (comprador.getCantBoletos()<cantLocal1){
-                            if (comprador.getSaldoMax()>Local1){
+                        if (comprador.getCantBoletos()<=cantLocal1){
+                            if (comprador.getSaldoMax()>=(Local1*comprador.getCantBoletos())){
                                 cantLocal1 = cantLocal1-comprador.getCantBoletos();
                                 comprador.setSaldoMax(comprador.getSaldoMax()-Local1);
+                                totalVendido+=(Local1*comprador.getCantBoletos());
+                                System.out.println("--------------------------------");
                                 System.out.println("Se generó su ticket exitosamente");
+                                System.out.println("--------------------------------");
                             }else{
                                 System.out.println("--------------------------------");
                                 System.out.println("No hay saldo suficiente");
@@ -275,11 +296,14 @@ public class Boleto {
                     break;
                 case 2:
                     if (cantLocal2!=0){
-                        if (comprador.getCantBoletos()<cantLocal2){
-                            if (comprador.getSaldoMax()>Local5){
+                        if (comprador.getCantBoletos()<=cantLocal2){
+                            if (comprador.getSaldoMax()>=(Local5*comprador.getCantBoletos())){
                                 cantLocal2 = cantLocal2-comprador.getCantBoletos();
                                 comprador.setSaldoMax(comprador.getSaldoMax()-Local5);
+                                totalVendido+=(Local5*comprador.getCantBoletos());
+                                System.out.println("--------------------------------");
                                 System.out.println("Se generó su ticket exitosamente");
+                                System.out.println("--------------------------------");
                             }else{
                                 System.out.println("--------------------------------");
                                 System.out.println("No hay saldo suficiente");
@@ -295,11 +319,14 @@ public class Boleto {
                     break;
                 case 3:
                     if (cantLocal1!=0){
-                        if (comprador.getCantBoletos()<cantLocal3){
-                            if (comprador.getSaldoMax()>Local10){
+                        if (comprador.getCantBoletos()<=cantLocal3){
+                            if (comprador.getSaldoMax()>=(Local10*comprador.getCantBoletos())){
                                 cantLocal3 = cantLocal3-comprador.getCantBoletos();
                                 comprador.setSaldoMax(comprador.getSaldoMax()-Local10);
+                                totalVendido+=(Local10*comprador.getCantBoletos());
+                                System.out.println("--------------------------------");
                                 System.out.println("Se generó su ticket exitosamente");
+                                System.out.println("--------------------------------");
                             }else{
                                 System.out.println("--------------------------------");
                                 System.out.println("No hay saldo suficiente");
@@ -325,15 +352,15 @@ public class Boleto {
     
     public void consultaTotal(Comprador comprador){
         System.out.println("--- Boletos vendidos segun localidad ---- ");
-        System.out.println("Localidad 1:  \n"+(20-cantLocal1));
-        System.out.println("Localidad 2:  \n"+(20-cantLocal2));
-        System.out.println("Localidad 3:  \n"+(20-cantLocal3));
+        System.out.println("Localidad 1:  "+(20-cantLocal1));
+        System.out.println("Localidad 2:  "+(20-cantLocal2));
+        System.out.println("Localidad 3:  "+(20-cantLocal3));
         System.out.println("--------------------------------");
         
         System.out.println("--- Boletos disponibles segun localidad ---- ");
-        System.out.println("Localidad 1:  \n"+(cantLocal1));
-        System.out.println("Localidad 2:  \n"+(cantLocal2));
-        System.out.println("Localidad 3:  \n"+(cantLocal3));
+        System.out.println("Localidad 1:  "+(cantLocal1));
+        System.out.println("Localidad 2:  "+(cantLocal2));
+        System.out.println("Localidad 3:  "+(cantLocal3));
         System.out.println("--------------------------------");
     }
 
@@ -341,17 +368,27 @@ public class Boleto {
         switch (localidad) {
             case 1:
                 System.out.println("--- Boletos disponibles segun localidad ---- ");
-                System.out.println("Localidad 1:  \n"+(cantLocal1));
+                System.out.println("Localidad 1:  "+(cantLocal1));
+                System.out.println("--------------------------------");
                 break;
             case 2:
                 System.out.println("--- Boletos disponibles segun localidad ---- ");
-                System.out.println("Localidad 2:  \n"+(cantLocal2));
+                System.out.println("Localidad 2:  "+(cantLocal2));
+                System.out.println("--------------------------------");
                 break;
             case 3:
                 System.out.println("--- Boletos disponibles segun localidad ---- ");
-                System.out.println("Localidad 3:  \n"+(cantLocal3));
+                System.out.println("Localidad 3:  "+(cantLocal3));
+                System.out.println("--------------------------------");
                 break;
         }
+    }
+
+    public void reporte(Comprador comprador){
+        System.out.println(" Total generado por las 3 localidades");
+        System.out.println(totalVendido);
+        System.out.println("--------------------------------");
+
     }
 
 }

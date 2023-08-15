@@ -11,6 +11,8 @@ import java.util.Scanner;
 public class Principal {
     public static void main(String[] args){
         Scanner sc = new Scanner (System.in);
+		Boleto boleto = new Boleto();
+		Comprador comprador = null;
 
         int opcion = menu();
         
@@ -27,11 +29,26 @@ public class Principal {
                 int saldoMax = sc.nextInt();
                 sc.nextLine();
 
-                Comprador comprador = new Comprador(nombre, email, cantBoleto, saldoMax);
+                comprador = new Comprador(nombre, email, cantBoleto, saldoMax);
                 System.out.println(comprador);
                 
                 opcion = menu();
             }
+			if (opcion == 2){
+				boleto.comprarBoleto(comprador);
+				opcion = menu();
+			}
+			if (opcion == 3){
+				boleto.consultaTotal(comprador);
+				opcion = menu();
+			}
+			if (opcion == 4){
+				System.out.println("Ingrese el número de localidad (1, 2 o 3): ");
+                int localidad = sc.nextInt();
+				sc.nextLine();
+				boleto.consultaIndividual(comprador,localidad);
+				opcion = menu();
+			}
 
 
         }
